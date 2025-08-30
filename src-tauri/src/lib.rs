@@ -8,7 +8,9 @@ use models::admin::{create_admin_table, add_admin, validate_admin, update_admin,
 use models::employee::{
     create_employee_table, add_employee, get_employees, update_employee, delete_employee, Employee,
 };
-use crate::models::products::Product;
+use models::products::{
+    create_product_table, add_product, get_products, update_product, delete_product, Product,
+};
 use models::sale::{start_sale, add_sale_item, update_sale_total, get_all_sales, SaleReport};
 use models::report::{get_report, SalesReport};
 
@@ -97,29 +99,35 @@ fn delete_employee_cmd(app: tauri::AppHandle, id: i32) -> Result<(), String> {
 
 // ---------------- PRODUCT COMMANDS ----------------
 #[tauri::command]
-fn add_product_cmd(app: tauri::AppHandle, name: String, price: f64, barcode: Option<String>, allow_custom_price: bool) -> Result<(), String> {
+fn setup_product_table(app: tauri::AppHandle) -> Result<(), String> {
     let conn = init_db(&app).map_err(|e| e.to_string())?;
-    Product::create(&conn, &name, price, barcode.as_deref(), allow_custom_price)
-        .map_err(|e| e.to_string())
+    create_product_table(&conn).map_err(|e| e.to_string())
+}
+
+#[tauri::command]
+fn add_product_cmd(app: tauri::AppHandle, name: String, price: f64, barcode: Option<String>) -> Result<(), String> {
+    let conn = init_db(&app).map_err(|e| e.to_string())?;
+    add_product(&conn, &name, price, barcode.as_deref())
+        .map_err(|e| e.to_string())?;
+    Ok(())
 }
 
 #[tauri::command]
 fn get_products_cmd(app: tauri::AppHandle) -> Result<Vec<Product>, String> {
     let conn = init_db(&app).map_err(|e| e.to_string())?;
-    Product::get_all(&conn).map_err(|e| e.to_string())
+    get_products(&conn).map_err(|e| e.to_string())
 }
 
 #[tauri::command]
-fn update_product_cmd(app: tauri::AppHandle, id: i32, name: String, price: f64, barcode: Option<String>, allow_custom_price: bool) -> Result<(), String> {
+fn update_product_cmd(app: tauri::AppHandle, id: i32, name: String, price: f64, barcode: String) -> Result<(), String> {
     let conn = init_db(&app).map_err(|e| e.to_string())?;
-    Product::update(&conn, id, &name, price, barcode.as_deref(), allow_custom_price)
-        .map_err(|e| e.to_string())
+    update_product(&conn, id, &name, price, &barcode).map(|_| ()).map_err(|e| e.to_string())
 }
 
 #[tauri::command]
 fn delete_product_cmd(app: tauri::AppHandle, id: i32) -> Result<(), String> {
     let conn = init_db(&app).map_err(|e| e.to_string())?;
-    Product::delete(&conn, id).map_err(|e| e.to_string())
+    delete_product(&conn, id).map(|_| ()).map_err(|e| e.to_string())
 }
 
 // ---------------- SALE COMMANDS ----------------
@@ -182,6 +190,7 @@ pub fn run() {
             update_employee_cmd,
             delete_employee_cmd,
             // Product
+            setup_product_table,
             add_product_cmd,
             get_products_cmd,
             update_product_cmd,
