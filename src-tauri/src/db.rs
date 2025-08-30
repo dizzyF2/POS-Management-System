@@ -59,7 +59,7 @@ pub fn init_db(app: &tauri::AppHandle) -> Result<Connection> {
 pub fn establish_connection(app: &tauri::AppHandle) -> Result<Connection, rusqlite::Error> {
     let path: PathBuf = app
         .path()
-        .resolve("cashier.db", BaseDirectory::AppData)
+        .resolve("restaurant.db", BaseDirectory::AppData)
         .unwrap();
 
     Connection::open(path)
