@@ -1,8 +1,8 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
-  "productName": "restaurant-management-system",
+  "productName": "Star Damask",
   "version": "0.1.0",
-  "identifier": "com.hp.restaurant-management-system",
+  "identifier": "com.stardamask.app",
   "build": {
     "beforeDevCommand": "npm run dev",
     "devUrl": "http://localhost:1420",
@@ -12,7 +12,7 @@
   "app": {
     "windows": [
       {
-        "title": "restaurant-management-system",
+        "title": "Star Damask",
         "width": 800,
         "height": 600
       }
