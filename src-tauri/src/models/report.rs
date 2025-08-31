@@ -27,7 +27,7 @@ pub fn get_report(
 
     // Fetch total sales and transactions
     let mut stmt = conn.prepare(
-        "SELECT IFNULL(SUM(price * quantity), 0) as total_sales,
+        "SELECT IFNULL(SUM((price + extra_amount) * quantity), 0) as total_sales,
                 COUNT(DISTINCT sale_id) as total_transactions
             FROM sale_items
             JOIN sales ON sale_items.sale_id = sales.id
@@ -40,7 +40,7 @@ pub fn get_report(
     // Fetch detailed sales
     let mut stmt_details = conn.prepare(
         "SELECT sale_items.product_name, sale_items.quantity, sales.employee_name, 
-                (sale_items.price * sale_items.quantity) as total_price, sales.timestamp
+                ((sale_items.price + sale_items.extra_amount) * sale_items.quantity) as total_price, sales.timestamp
             FROM sale_items
             JOIN sales ON sale_items.sale_id = sales.id
             WHERE date(sales.timestamp) BETWEEN ?1 AND ?2

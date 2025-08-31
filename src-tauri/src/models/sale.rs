@@ -21,20 +21,30 @@ pub fn start_sale(conn: &Connection, employee_id: i32, employee_name: &str) -> R
 }
 
 // Add an item: store both product_id and product_name (snapshot)
-pub fn add_sale_item(conn: &Connection, sale_id: i64, product_id: i32, quantity: i32) -> Result<()> {
-    let mut stmt = conn.prepare("SELECT name, price FROM products WHERE id = ?1")?;
-    let (product_name, price): (String, f64) = stmt.query_row(params![product_id], |row| Ok((row.get(0)?, row.get(1)?)))?;
+pub fn add_sale_item(
+    conn: &Connection,
+    sale_id: i64,
+    product_id: i32,
+    quantity: i32,
+    price: f64,
+    extra_amount: f64,
+) -> Result<()> {
+    let mut stmt = conn.prepare("SELECT name FROM products WHERE id = ?1")?;
+    let product_name: String = stmt.query_row(params![product_id], |row| row.get(0))?;
 
     conn.execute(
-        "INSERT INTO sale_items (sale_id, product_id, product_name, quantity, price) VALUES (?1, ?2, ?3, ?4, ?5)",
-        params![sale_id, product_id, product_name, quantity, price],
+        "INSERT INTO sale_items (sale_id, product_id, product_name, quantity, price, extra_amount) 
+        VALUES (?1, ?2, ?3, ?4, ?5, ?6)",
+        params![sale_id, product_id, product_name, quantity, price, extra_amount],
     )?;
     Ok(())
 }
 
 // Update the sale total based on sum of items
 pub fn update_sale_total(conn: &Connection, sale_id: i64) -> Result<()> {
-    let mut stmt = conn.prepare("SELECT SUM(quantity * price) FROM sale_items WHERE sale_id = ?1")?;
+    let mut stmt = conn.prepare(
+        "SELECT SUM(quantity * (price + extra_amount)) FROM sale_items WHERE sale_id = ?1"
+    )?;
     let total: f64 = stmt.query_row(params![sale_id], |row| row.get(0))?;
 
     conn.execute(

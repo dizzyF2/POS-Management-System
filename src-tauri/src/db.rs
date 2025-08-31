@@ -46,7 +46,8 @@ pub fn init_db(app: &tauri::AppHandle) -> Result<Connection> {
             product_id INTEGER,
             product_name TEXT NOT NULL,
             quantity INTEGER NOT NULL,
-            price REAL NOT NULL, 
+            price REAL NOT NULL,
+            extra_amount REAL NOT NULL DEFAULT 0,
             FOREIGN KEY(sale_id) REFERENCES sales(id) ON DELETE CASCADE,
             FOREIGN KEY(product_id) REFERENCES products(id) ON DELETE SET NULL
         );

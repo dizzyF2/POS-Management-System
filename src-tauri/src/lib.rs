@@ -137,10 +137,19 @@ fn start_sale_cmd(app: tauri::AppHandle, employee_id: i32, employee_name: String
     start_sale(&conn, employee_id, &employee_name).map_err(|e| e.to_string())
 }
 
+
 #[tauri::command]
-fn add_sale_item_cmd(app: tauri::AppHandle, sale_id: i64, product_id: i32, quantity: i32) -> Result<(), String> {
+fn add_sale_item_cmd(
+    app: tauri::AppHandle,
+    sale_id: i64,
+    product_id: i32,
+    quantity: i32,
+    price: f64,  
+    extra_amount: f64 
+) -> Result<(), String> {
     let conn = init_db(&app).map_err(|e| e.to_string())?;
-    add_sale_item(&conn, sale_id, product_id, quantity).map_err(|e| e.to_string())
+    add_sale_item(&conn, sale_id, product_id, quantity, price, extra_amount)
+        .map_err(|e| e.to_string())
 }
 
 #[tauri::command]
