@@ -186,7 +186,7 @@ export default function ReportPage() {
                         <TableCell>{sale.product_name}</TableCell>
                         <TableCell>{sale.quantity}</TableCell>
                         <TableCell>{sale.employee_name}</TableCell>
-                        <TableCell>${sale.total_price.toFixed(2)}</TableCell>
+                        <TableCell>${sale.total_price}</TableCell>
                         <TableCell>{formatCairoDateTime(sale.timestamp)}</TableCell>
                         </TableRow>
                     ))

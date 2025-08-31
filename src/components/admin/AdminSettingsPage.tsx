@@ -3,6 +3,7 @@ import { invoke } from "@tauri-apps/api/core";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import toast from "react-hot-toast";
 
 export default function AdminSettingsPage() {
     const [oldPassword, setOldPassword] = useState("");
@@ -12,10 +13,12 @@ export default function AdminSettingsPage() {
     const [confirmPassword, setConfirmPassword] = useState("");
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState("");
+    const [messageType, setMessageType] = useState<"success" | "error" | "">("");
 
     const handleVerifyOldPassword = async () => {
         if (!oldPassword) {
             setMessage("Please enter your old password");
+            setMessageType("error");
             return;
         }
         setLoading(true);
@@ -24,11 +27,14 @@ export default function AdminSettingsPage() {
             if (isValid) {
                 setIsVerified(true);
                 setMessage("Password verified. You can now update your credentials.");
+                setMessageType("success");
             } else {
                 setMessage("Incorrect password");
+                setMessageType("error");
             }
         } catch {
             setMessage("Error verifying old password");
+            setMessageType("error");
         } finally {
             setLoading(false);
         }
@@ -37,10 +43,12 @@ export default function AdminSettingsPage() {
     const handleUpdate = async () => {
         if (!newName || !newPassword || !confirmPassword) {
             setMessage("Please fill in all fields");
+            setMessageType("error");
             return;
         }
         if (newPassword !== confirmPassword) {
             setMessage("Passwords do not match");
+            setMessageType("error");
             return;
         }
         setLoading(true);
@@ -52,12 +60,16 @@ export default function AdminSettingsPage() {
             });
             if (success) {
                 setMessage("Admin credentials updated successfully");
+                setMessageType("success");
+                toast.success("updated Successfully")
                 resetForm();
             } else {
                 setMessage("Failed to update admin. Old password might be incorrect.");
+                setMessageType("error");
             }
         } catch {
             setMessage("Error updating admin");
+            setMessageType("error");
         } finally {
             setLoading(false);
         }
@@ -70,6 +82,7 @@ export default function AdminSettingsPage() {
         setConfirmPassword("");
         setIsVerified(false);
         setMessage("");
+        setMessageType("");
     };
 
     return (
@@ -80,7 +93,15 @@ export default function AdminSettingsPage() {
                 </CardHeader>
                 <CardContent className="space-y-6">
                     {message && (
-                        <p className="text-sm text-center font-medium text-green-700 bg-green-50 p-2 rounded">
+                        <p
+                            className={`${
+                                messageType === "success"
+                                    ? "text-green-600 bg-green-50"
+                                    : messageType === "error"
+                                    ? "text-red-600 bg-red-50"
+                                    : ""
+                            } text-sm text-center font-medium p-2 rounded`}
+                        >
                             {message}
                         </p>
                     )}
