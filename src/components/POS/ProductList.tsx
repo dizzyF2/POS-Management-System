@@ -15,12 +15,12 @@ interface ProductListProps {
 }
 
 export default function ProductList({ products, onAddToCart, loading, error }: ProductListProps) {
-    if (loading) return <p className="text-center text-red-600 font-medium">Loading products...</p>;
+    if (loading) return <p className="text-center text-red-600 font-medium">جارٍ تحميل المنتجات...</p>;
     if (error) return <p className="text-red-500 text-center">{error}</p>;
-    if (products.length === 0) return <p className="text-gray-500 text-center">No products found.</p>;
+    if (products.length === 0) return <p className="text-gray-500 text-center">لم يتم العثور على منتجات.</p>;
 
     return (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6" dir="rtl">
             {products.map((p) => (
                 <Card
                     key={p.id}
@@ -33,8 +33,8 @@ export default function ProductList({ products, onAddToCart, loading, error }: P
                         </CardTitle>
                     </CardHeader>
                     <CardContent className="p-4 pt-0 flex flex-col gap-2">
-                        <p className="text-red-600 font-bold text-xl">${p.price.toFixed(2)}</p>
-                        <p className="text-sm text-gray-500">Barcode: {p.barcode}</p>
+                        <p className="text-red-600 font-bold text-xl">{p.price} ج.م</p>
+                        <p className="text-sm text-gray-500">الباركود: {p.barcode}</p>
                     </CardContent>
                 </Card>
             ))}

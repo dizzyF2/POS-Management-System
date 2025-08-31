@@ -17,7 +17,7 @@ export default function AdminSettingsPage() {
 
     const handleVerifyOldPassword = async () => {
         if (!oldPassword) {
-            setMessage("Please enter your old password");
+            setMessage("الرجاء إدخال كلمة المرور الحالية");
             setMessageType("error");
             return;
         }
@@ -26,14 +26,14 @@ export default function AdminSettingsPage() {
             const isValid = await invoke<boolean>("verify_old_password_cmd", { oldPassword });
             if (isValid) {
                 setIsVerified(true);
-                setMessage("Password verified. You can now update your credentials.");
+                setMessage("تم التحقق من كلمة المرور. يمكنك الآن تحديث البيانات.");
                 setMessageType("success");
             } else {
-                setMessage("Incorrect password");
+                setMessage("كلمة المرور غير صحيحة");
                 setMessageType("error");
             }
         } catch {
-            setMessage("Error verifying old password");
+            setMessage("حدث خطأ أثناء التحقق من كلمة المرور");
             setMessageType("error");
         } finally {
             setLoading(false);
@@ -42,12 +42,12 @@ export default function AdminSettingsPage() {
 
     const handleUpdate = async () => {
         if (!newName || !newPassword || !confirmPassword) {
-            setMessage("Please fill in all fields");
+            setMessage("الرجاء ملء جميع الحقول");
             setMessageType("error");
             return;
         }
         if (newPassword !== confirmPassword) {
-            setMessage("Passwords do not match");
+            setMessage("كلمات المرور غير متطابقة");
             setMessageType("error");
             return;
         }
@@ -59,16 +59,16 @@ export default function AdminSettingsPage() {
                 newPassword,
             });
             if (success) {
-                setMessage("Admin credentials updated successfully");
+                setMessage("تم تحديث بيانات المسؤول بنجاح");
                 setMessageType("success");
-                toast.success("updated Successfully")
+                toast.success("تم التحديث بنجاح");
                 resetForm();
             } else {
-                setMessage("Failed to update admin. Old password might be incorrect.");
+                setMessage("فشل في تحديث بيانات المسؤول. قد تكون كلمة المرور القديمة غير صحيحة.");
                 setMessageType("error");
             }
         } catch {
-            setMessage("Error updating admin");
+            setMessage("حدث خطأ أثناء تحديث البيانات");
             setMessageType("error");
         } finally {
             setLoading(false);
@@ -86,10 +86,10 @@ export default function AdminSettingsPage() {
     };
 
     return (
-        <div className="p-6 max-w-2xl mx-auto">
+        <div className="p-6 max-w-2xl mx-auto" dir="rtl">
             <Card className="shadow-lg border border-red-200">
                 <CardHeader>
-                    <CardTitle className="text-3xl font-bold text-red-700">Admin Settings</CardTitle>
+                    <CardTitle className="text-3xl font-bold text-red-700">إعدادات المسؤول</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-6">
                     {message && (
@@ -109,52 +109,56 @@ export default function AdminSettingsPage() {
                         <div className="flex flex-col gap-4">
                             <Input
                                 type="password"
-                                placeholder="Enter Current Password"
+                                placeholder="أدخل كلمة المرور الحالية"
                                 value={oldPassword}
                                 onChange={(e) => setOldPassword(e.target.value)}
+                                className="text-right"
                             />
                             <Button
                                 onClick={handleVerifyOldPassword}
                                 disabled={loading}
                                 className="bg-red-600 hover:bg-red-700 text-white font-semibold"
                             >
-                                {loading ? "Verifying..." : "Verify Password"}
+                                {loading ? "جار التحقق..." : "تحقق من كلمة المرور"}
                             </Button>
                         </div>
                     ) : (
                         <div className="flex flex-col gap-4">
                             <Input
                                 type="text"
-                                placeholder="New Name"
+                                placeholder="الاسم الجديد"
                                 value={newName}
-                                onChange={(e) => setNewName(e.target.value.toLocaleLowerCase())}
+                                onChange={(e) => setNewName(e.target.value)}
+                                className="text-right"
                             />
                             <Input
                                 type="password"
-                                placeholder="New Password"
+                                placeholder="كلمة المرور الجديدة"
                                 value={newPassword}
-                                onChange={(e) => setNewPassword(e.target.value.toLocaleLowerCase())}
+                                onChange={(e) => setNewPassword(e.target.value)}
+                                className="text-right"
                             />
                             <Input
                                 type="password"
-                                placeholder="Confirm Password"
+                                placeholder="تأكيد كلمة المرور"
                                 value={confirmPassword}
-                                onChange={(e) => setConfirmPassword(e.target.value.toLocaleLowerCase())}
+                                onChange={(e) => setConfirmPassword(e.target.value)}
+                                className="text-right"
                             />
-                            <div className="flex gap-3">
+                            <div className="flex gap-3 justify-end">
                                 <Button
                                     onClick={handleUpdate}
                                     disabled={loading}
                                     className="bg-red-600 hover:bg-red-700 text-white font-semibold"
                                 >
-                                    {loading ? "Updating..." : "Update"}
+                                    {loading ? "جار التحديث..." : "تحديث"}
                                 </Button>
                                 <Button
                                     variant="outline"
                                     onClick={resetForm}
                                     className="border-red-600 text-red-600 hover:bg-red-50"
                                 >
-                                    Cancel
+                                    إلغاء
                                 </Button>
                             </div>
                         </div>

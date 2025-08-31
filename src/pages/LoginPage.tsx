@@ -30,10 +30,10 @@ export default function LoginPage() {
                 login("admin");
                 navigate("/admin");
             } else {
-                toast.error("Invalid credentials");
+                toast.error("بيانات الدخول غير صحيحة");
             }
         } catch {
-            toast.error("Error logging in");
+            toast.error("حدث خطأ أثناء تسجيل الدخول");
         }
     };
 
@@ -43,19 +43,19 @@ export default function LoginPage() {
     };
 
     return (
-        <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-red-50 to-white p-4">
+        <div dir="rtl" className="flex items-center justify-center min-h-screen bg-gradient-to-br from-red-50 to-white p-4">
             <Card className="w-full max-w-md shadow-lg rounded-2xl border border-gray-200 bg-white">
                 <CardHeader className="flex flex-col items-center gap-3 text-center">
                     <img
                         src="/icons/restaurant-logo.jpeg"
-                        alt="restaurant logo"
-                        className="w-36 h-20 rounded-md  shadow-sm"
+                        alt="شعار المطعم"
+                        className="w-36 h-20 rounded-md shadow-sm"
                     />
-                    <h1 className="text-3xl font-extrabold text-red-600 capitalize">star damask</h1>
+                    <h1 className="text-3xl font-extrabold text-red-600">النجم الدمشقي</h1>
                     <p className="text-sm text-gray-500">
                         {role === "admin"
-                            ? "Sign in to access the Admin Panel"
-                            : "Select your role to continue"}
+                            ? "تسجيل الدخول للوصول إلى لوحة التحكم"
+                            : "اختر الدور للاستمرار"}
                     </p>
                 </CardHeader>
 
@@ -66,13 +66,13 @@ export default function LoginPage() {
                                 onClick={handleEmployeeAccess}
                                 className="w-full bg-red-500 hover:bg-red-600 text-white font-semibold py-2 rounded-lg"
                             >
-                                Employee
+                                موظف
                             </Button>
                             <Button
                                 onClick={() => setRole("admin")}
                                 className="w-full bg-gray-800 hover:bg-gray-900 text-white font-semibold py-2 rounded-lg"
                             >
-                                Admin
+                                مدير
                             </Button>
                         </div>
                     )}
@@ -83,7 +83,7 @@ export default function LoginPage() {
                                 <User className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
                                 <Input
                                     type="text"
-                                    placeholder="Admin Name"
+                                    placeholder="اسم المدير"
                                     value={adminName}
                                     onChange={(e) => setAdminName(e.target.value.toLocaleLowerCase())}
                                     className="pl-10"
@@ -93,7 +93,7 @@ export default function LoginPage() {
                                 <Lock className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
                                 <Input
                                     type="password"
-                                    placeholder="Password"
+                                    placeholder="كلمة المرور"
                                     value={adminPassword}
                                     onChange={(e) => setAdminPassword(e.target.value.toLocaleLowerCase())}
                                     className="pl-10"
@@ -109,14 +109,14 @@ export default function LoginPage() {
                             onClick={handleAdminLogin}
                             className="w-full bg-red-500 hover:bg-red-600 text-white font-semibold py-2 rounded-lg"
                         >
-                            Login
+                            تسجيل الدخول
                         </Button>
                         <Button
                             variant="outline"
                             onClick={() => setRole(null)}
                             className="w-full border-gray-300 text-gray-700 hover:bg-gray-100"
                         >
-                            Back
+                            رجوع
                         </Button>
                     </CardFooter>
                 )}

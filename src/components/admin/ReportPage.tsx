@@ -11,6 +11,7 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table";
+import toast from "react-hot-toast";
 
 type SaleDetail = {
     product_name: string;
@@ -50,10 +51,10 @@ export default function ReportPage() {
                 setTotalTransactions(result.total_transactions || 0);
             }
         } catch (err) {
-            console.error("Failed to fetch report:", err);
+            console.error("فشل في جلب التقرير:", err);
+            toast.error("فشل في جلب التقرير")
         }
     };
-
 
     const formatCairoDateTime = (utcLike: string) => {
         try {
@@ -104,7 +105,7 @@ export default function ReportPage() {
             <Card className="shadow-lg">
                 <CardContent>
                     <CardTitle className="text-2xl font-bold text-red-900 mb-6">
-                        Sales Report
+                        تقرير المبيعات
                     </CardTitle>
 
                     {/* Preset Filters */}
@@ -114,27 +115,27 @@ export default function ReportPage() {
                             className="border-red-700 text-red-700 hover:bg-red-700 hover:text-white"
                             onClick={() => applyPreset("daily")}
                         >
-                            Daily
+                            يومي
                         </Button>
                         <Button
                             variant="outline"
                             className="border-red-700 text-red-700 hover:bg-red-700 hover:text-white"
                             onClick={() => applyPreset("weekly")}
                         >
-                            Weekly
+                            أسبوعي
                         </Button>
                         <Button
                             variant="outline"
                             className="border-red-700 text-red-700 hover:bg-red-700 hover:text-white"
                             onClick={() => applyPreset("monthly")}
                         >
-                            Monthly
+                            شهري
                         </Button>
                     </div>
 
                     {/* Specific Date Filter */}
                     <div className="bg-gray-50 p-4 rounded-lg shadow-inner mb-6">
-                        <h3 className="text-lg font-semibold text-gray-700 mb-3">View Report by Specific Date</h3>
+                        <h3 className="text-lg font-semibold text-gray-700 mb-3">عرض التقرير بتاريخ محدد</h3>
                         <div className="flex flex-col md:flex-row items-center gap-4">
                             <Input
                                 type="date"
@@ -150,18 +151,18 @@ export default function ReportPage() {
                                 className="bg-red-700 hover:bg-red-800 text-white w-full md:w-auto"
                                 disabled={!startDate}
                             >
-                                View Report
+                                عرض التقرير
                             </Button>
                         </div>
                         <p className="text-xs text-gray-500 mt-2">
-                            Select a specific date to see its sales report.
+                            اختر تاريخًا محددًا لعرض تقرير المبيعات الخاص به.
                         </p>
                     </div>
 
                     {/* Date Range */}
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
                         <div>
-                            <label className="block text-sm mb-1 font-medium">Start Date</label>
+                            <label className="block text-sm mb-1 font-medium">تاريخ البداية</label>
                             <Input
                                 type="date"
                                 value={startDate}
@@ -169,7 +170,7 @@ export default function ReportPage() {
                             />
                         </div>
                         <div>
-                            <label className="block text-sm mb-1 font-medium">End Date</label>
+                            <label className="block text-sm mb-1 font-medium">تاريخ النهاية</label>
                             <Input
                                 type="date"
                                 value={endDate}
@@ -180,17 +181,17 @@ export default function ReportPage() {
                             onClick={() => fetchReport()}
                             className="bg-red-700 hover:bg-red-800 text-white self-end"
                         >
-                            Apply
+                            تطبيق
                         </Button>
                     </div>
 
                     {/* Summary */}
                     <div className="bg-red-50 p-4 rounded-lg shadow-inner grid grid-cols-1 md:grid-cols-2 gap-3 mb-6">
                         <p className="text-lg font-semibold text-red-900">
-                            Total Sales: ${totalSales}
+                            إجمالي المبيعات: {totalSales} ج.م
                         </p>
                         <p className="text-lg font-semibold text-red-900">
-                            Total Transactions: {totalTransactions}
+                            إجمالي العمليات: {totalTransactions}
                         </p>
                     </div>
 
@@ -199,11 +200,11 @@ export default function ReportPage() {
                         <Table>
                             <TableHeader>
                                 <TableRow className="bg-red-100 hover:bg-red-100">
-                                    <TableHead>Product</TableHead>
-                                    <TableHead>Quantity</TableHead>
-                                    <TableHead>Employee</TableHead>
-                                    <TableHead>Total</TableHead>
-                                    <TableHead>Timestamp</TableHead>
+                                    <TableHead>المنتج</TableHead>
+                                    <TableHead>الكمية</TableHead>
+                                    <TableHead>الموظف</TableHead>
+                                    <TableHead>الإجمالي</TableHead>
+                                    <TableHead>التاريخ والوقت</TableHead>
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
@@ -213,14 +214,14 @@ export default function ReportPage() {
                                             <TableCell>{sale.product_name}</TableCell>
                                             <TableCell>{sale.quantity}</TableCell>
                                             <TableCell>{sale.employee_name}</TableCell>
-                                            <TableCell>${sale.total_price}</TableCell>
+                                            <TableCell>{sale.total_price} ج.م</TableCell>
                                             <TableCell>{formatCairoDateTime(sale.timestamp)}</TableCell>
                                         </TableRow>
                                     ))
                                 ) : (
                                     <TableRow>
                                         <TableCell colSpan={5} className="text-center text-gray-500 p-4">
-                                            No data available yet
+                                            لا توجد بيانات متاحة حاليًا
                                         </TableCell>
                                     </TableRow>
                                 )}

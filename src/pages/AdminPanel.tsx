@@ -15,18 +15,18 @@ export default function AdminPanel() {
     const navigate = useNavigate();
 
     const menuItems = [
-        { key: "products", label: "Products", icon: Package },
-        { key: "employees", label: "Employees", icon: Users },
-        { key: "reports", label: "Reports", icon: BarChart3 },
-        { key: "settings", label: "Settings", icon: Settings },
+        { key: "products", label: "المنتجات", icon: Package },
+        { key: "employees", label: "الموظفين", icon: Users },
+        { key: "reports", label: "التقارير", icon: BarChart3 },
+        { key: "settings", label: "الإعدادات", icon: Settings },
     ];
 
     const fetchAdminName = async () => {
         try {
-            const name = await invoke<string>("get_admin_name");
+            const name = await invoke<string>("get_admin_name")
             setAdminName(name);
         } catch (error) {
-            console.error("Failed to fetch admin name:", error);
+            console.error("Failed to fetch admin name:", error)
         }
     };
 
@@ -53,10 +53,10 @@ export default function AdminPanel() {
                 >
                     <img
                         src="/icons/restaurant-logo.jpeg"
-                        alt="star damask logo"
+                        alt="شعار المطعم"
                         className="w-14 h-14 mr-3"
                     />
-                    <h1 className="text-lg font-bold text-red-600">Admin Panel</h1>
+                    <h1 className="text-lg font-bold text-red-600">لوحة التحكم</h1>
                 </div>
 
                 <nav className="flex-1 mt-6 space-y-2 px-4">
@@ -87,20 +87,20 @@ export default function AdminPanel() {
                         className="w-full bg-red-600 hover:bg-red-700 text-white flex items-center justify-center space-x-2 rounded-lg shadow-md font-semibold"
                     >
                         <LogOut size={18} />
-                        <span>Logout</span>
+                        <span>تسجيل الخروج</span>
                     </Button>
                 </div>
             </aside>
 
-            {/* Main Content */}
+            {/* المحتوى الرئيسي */}
             <main className="flex-1 p-6 overflow-y-auto">
                 {!activePage && (
                     <div className="flex flex-col items-center justify-center h-full text-center">
                         <h2 className="text-3xl font-bold text-gray-800 mb-4 capitalize">
-                            welcome, {adminName}!
+                            مرحباً، {adminName}!
                         </h2>
                         <p className="text-lg text-gray-600">
-                            Select an option from the menu to get started.
+                            اختر خياراً من القائمة للبدء.
                         </p>
                     </div>
                 )}

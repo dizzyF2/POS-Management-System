@@ -30,23 +30,23 @@ export default function EmployeeModal({
 
     return (
         <Dialog open onOpenChange={onClose}>
-            <DialogContent className="max-w-md bg-white rounded-xl shadow-lg p-6">
+            <DialogContent className="max-w-md bg-white rounded-xl shadow-lg p-6" dir="rtl">
                 <DialogHeader>
                     <DialogTitle className="text-xl font-bold text-red-600">
-                        Select Employee
+                        اختر الموظف
                     </DialogTitle>
                 </DialogHeader>
 
                 <div className="mt-4">
                     <label className="block text-gray-700 font-medium mb-2">
-                        Choose an Employee
+                        الرجاء اختيار موظف
                     </label>
                     <select
                         value={selectedEmployee?.id ?? ""}
                         onChange={handleSelectChange}
                         className="w-full border border-gray-300 rounded-lg px-4 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-red-500 transition"
                     >
-                        <option value="">-- Select Employee --</option>
+                        <option value="">-- اختر موظف --</option>
                         {employees.map((emp) => (
                             <option key={emp.id} value={emp.id}>
                                 {emp.name}
@@ -61,14 +61,14 @@ export default function EmployeeModal({
                         onClick={onClose}
                         className="border border-gray-300 text-gray-700 hover:bg-gray-100 rounded-lg px-4 py-2"
                     >
-                        Cancel
+                        إلغاء
                     </Button>
                     <Button
                         onClick={onConfirm}
                         disabled={loading || !selectedEmployee}
                         className="bg-red-600 hover:bg-red-700 text-white font-semibold rounded-lg px-4 py-2 disabled:opacity-50"
                     >
-                        {loading ? "Processing..." : "Confirm"}
+                        {loading ? "جارٍ المعالجة..." : "تأكيد"}
                     </Button>
                 </DialogFooter>
             </DialogContent>

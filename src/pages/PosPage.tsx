@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { invoke } from "@tauri-apps/api/core";
-import EmployeeModal from "../components/EmployeeModal";
-import SearchBar from "../components/SearchBar";
-import ProductList from "../components/ProductList";
-import Cart from "../components/Cart";
+import EmployeeModal from "../components/POS/EmployeeModal";
+import SearchBar from "../components/POS/SearchBar";
+import ProductList from "../components/POS/ProductList";
+import Cart from "../components/POS/Cart";
 import Header from "@/components/Header";
 import toast from "react-hot-toast";
 
@@ -119,7 +119,7 @@ export default function PosPage() {
 
     const handleCheckoutClick = () => {
         if (cart.length === 0) {
-            toast.error("Cart is empty");
+            toast.error("السلة فارغة")
             return;
         }
         setShowModal(true);
@@ -127,7 +127,7 @@ export default function PosPage() {
 
     const confirmCheckout = async () => {
         if (!selectedEmployee) {
-            toast.error("Please select an employee");
+            toast.error("يرجى اختيار موظف")
             return;
         }
         setCheckoutLoading(true);
@@ -148,12 +148,13 @@ export default function PosPage() {
                 });
             }
 
-            toast.success("Sale completed successfully!");
+            toast.success("تمت عملية البيع بنجاح!")
             setCart([]);
             setShowModal(false);
             setSelectedEmployee(null);
         } catch (err) {
-            toast.error("Checkout failed. Please try again.");
+            console.error("Checkout failed. Please try again.")
+            toast.error("فشل إتمام العملية. يرجى المحاولة مرة أخرى.")
         } finally {
             setCheckoutLoading(false);
         }
@@ -165,8 +166,8 @@ export default function PosPage() {
             <div className="p-6 flex flex-col lg:flex-row gap-6">
                 {/* Left Section */}
                 <div className="flex-1 bg-white rounded-2xl shadow-md p-6 border border-gray-200">
-                    <h1 className="text-3xl font-bold text-gray-900 mb-6">
-                        <span className="text-red-600">POS</span> - New Sale
+                    <h1 className="text-3xl font-bold text-gray-900 mb-6 text-right">
+                        عملية جديدة - <span className="text-red-600">نقطة البيع</span>
                     </h1>
                     <SearchBar value={search} onChange={setSearch} />
                     <div className="mt-6">

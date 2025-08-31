@@ -32,11 +32,11 @@ export default function Cart({
     onCheckout,
 }: CartProps) {
     return (
-        <div className="bg-white rounded-xl shadow-lg p-5 flex flex-col justify-between border border-gray-200">
+        <div className="bg-white rounded-xl shadow-lg p-5 flex flex-col justify-between border border-gray-200" dir="rtl">
             <div>
-                <h2 className="text-2xl font-bold text-gray-900 mb-4">Cart</h2>
+                <h2 className="text-2xl font-bold text-gray-900 mb-4">السلة</h2>
                 {items.length === 0 && (
-                    <p className="text-gray-500 text-center">No items in cart.</p>
+                    <p className="text-gray-500 text-center">لا توجد منتجات في السلة.</p>
                 )}
                 {items.map((item) => (
                     <div
@@ -47,11 +47,11 @@ export default function Cart({
                             <div>
                                 <p className="font-semibold text-gray-900">{item.product.name}</p>
                                 <p className="text-sm text-gray-500">
-                                    Base: ${item.product.price.toFixed(2)}
+                                    السعر الأساسي: ${item.product.price}
                                 </p>
                                 {item.extraAmount && item.extraAmount > 0 && (
                                     <p className="text-sm text-green-600">
-                                        + Extra: ${item.extraAmount.toFixed(2)}
+                                        + إضافي: ${item.extraAmount}
                                     </p>
                                 )}
                             </div>
@@ -90,7 +90,7 @@ export default function Cart({
                         <div>
                             <Input
                                 type="number"
-                                placeholder="Add Extra"
+                                placeholder="أضف قيمة إضافية"
                                 className="w-32 border-gray-300 focus:border-red-500"
                                 min="0"
                                 onChange={(e) =>
@@ -107,14 +107,14 @@ export default function Cart({
 
             <div className="mt-6">
                 <div className="flex justify-between font-bold text-xl mb-4 text-gray-900">
-                    <span>Total:</span>
-                    <span>${total.toFixed(2)}</span>
+                    <span>الإجمالي:</span>
+                    <span>{total} ج.م</span>
                 </div>
                 <Button
                     onClick={onCheckout}
                     className="w-full bg-red-600 hover:bg-red-700 text-white text-lg font-semibold py-3 rounded-lg"
                 >
-                    Checkout
+                    إتمام الدفع
                 </Button>
             </div>
         </div>
