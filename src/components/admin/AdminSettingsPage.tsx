@@ -127,19 +127,19 @@ export default function AdminSettingsPage() {
                                 type="text"
                                 placeholder="New Name"
                                 value={newName}
-                                onChange={(e) => setNewName(e.target.value)}
+                                onChange={(e) => setNewName(e.target.value.toLocaleLowerCase())}
                             />
                             <Input
                                 type="password"
                                 placeholder="New Password"
                                 value={newPassword}
-                                onChange={(e) => setNewPassword(e.target.value)}
+                                onChange={(e) => setNewPassword(e.target.value.toLocaleLowerCase())}
                             />
                             <Input
                                 type="password"
                                 placeholder="Confirm Password"
                                 value={confirmPassword}
-                                onChange={(e) => setConfirmPassword(e.target.value)}
+                                onChange={(e) => setConfirmPassword(e.target.value.toLocaleLowerCase())}
                             />
                             <div className="flex gap-3">
                                 <Button

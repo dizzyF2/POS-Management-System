@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { LogOut, Package, Users, BarChart3, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import ProductsPage from "../components/admin/ProductsPage";
@@ -6,11 +6,12 @@ import EmployeesPage from "../components/admin/EmployeesPage";
 import ReportPage from "../components/admin/ReportPage";
 import AdminSettingsPage from "../components/admin/AdminSettingsPage";
 import { useNavigate } from "react-router-dom";
+import { invoke } from "@tauri-apps/api/core";
 
 export default function AdminPanel() {
-    const [activePage, setActivePage] = useState<
-        "products" | "employees" | "reports" | "settings"
-    >("products");
+    const [activePage, setActivePage] = useState<"products" | "employees" | "reports" | "settings" | null>(null);
+    const [adminName, setAdminName] = useState<string>("admin");
+
     const navigate = useNavigate();
 
     const menuItems = [
@@ -20,6 +21,25 @@ export default function AdminPanel() {
         { key: "settings", label: "Settings", icon: Settings },
     ];
 
+    const fetchAdminName = async () => {
+        try {
+            const name = await invoke<string>("get_admin_name");
+            setAdminName(name);
+        } catch (error) {
+            console.error("Failed to fetch admin name:", error);
+        }
+    };
+
+    useEffect(() => {
+        fetchAdminName();
+    }, []);
+
+    useEffect(() => {
+        if (activePage === null) {
+            fetchAdminName();
+        }
+    }, [activePage]);
+
     const handleLogout = () => {
         navigate("/");
     };
@@ -27,7 +47,10 @@ export default function AdminPanel() {
     return (
         <div className="flex h-screen bg-gray-50">
             <aside className="w-64 bg-white border-r border-gray-200 shadow-md flex flex-col">
-                <div className="flex items-center p-5 border-b border-gray-200">
+                <div 
+                    className="flex items-center p-5 border-b border-gray-200 cursor-pointer"
+                    onClick={() => setActivePage(null)}
+                >
                     <img
                         src="/icons/restaurant-logo.jpeg"
                         alt="star damask logo"
@@ -71,6 +94,16 @@ export default function AdminPanel() {
 
             {/* Main Content */}
             <main className="flex-1 p-6 overflow-y-auto">
+                {!activePage && (
+                    <div className="flex flex-col items-center justify-center h-full text-center">
+                        <h2 className="text-3xl font-bold text-gray-800 mb-4 capitalize">
+                            welcome, {adminName}!
+                        </h2>
+                        <p className="text-lg text-gray-600">
+                            Select an option from the menu to get started.
+                        </p>
+                    </div>
+                )}
                 {activePage === "products" && <ProductsPage />}
                 {activePage === "employees" && <EmployeesPage />}
                 {activePage === "reports" && <ReportPage />}

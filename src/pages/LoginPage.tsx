@@ -85,7 +85,7 @@ export default function LoginPage() {
                                     type="text"
                                     placeholder="Admin Name"
                                     value={adminName}
-                                    onChange={(e) => setAdminName(e.target.value)}
+                                    onChange={(e) => setAdminName(e.target.value.toLocaleLowerCase())}
                                     className="pl-10"
                                 />
                             </div>
@@ -95,7 +95,7 @@ export default function LoginPage() {
                                     type="password"
                                     placeholder="Password"
                                     value={adminPassword}
-                                    onChange={(e) => setAdminPassword(e.target.value)}
+                                    onChange={(e) => setAdminPassword(e.target.value.toLocaleLowerCase())}
                                     className="pl-10"
                                 />
                             </div>

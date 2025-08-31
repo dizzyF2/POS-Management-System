@@ -64,6 +64,15 @@ fn reset_admin(app: tauri::AppHandle) -> Result<(), String> {
     Ok(())
 }
 
+#[tauri::command]
+fn get_admin_name(app: tauri::AppHandle) -> Result<String, String> {
+    let conn = init_db(&app).map_err(|e| e.to_string())?;
+    let name: String = conn
+        .query_row("SELECT name FROM admins WHERE id = 1", [], |row| row.get(0))
+        .map_err(|e| e.to_string())?;
+    Ok(name)
+}
+
 
 // -------- EMPLOYEE COMMANDS --------
 #[tauri::command]
@@ -192,6 +201,7 @@ pub fn run() {
             update_admin_cmd,
             verify_old_password_cmd,
             reset_admin,
+            get_admin_name,
             // Employee
             setup_employee_table,
             add_new_employee,
