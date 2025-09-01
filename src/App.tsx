@@ -24,12 +24,22 @@ function App() {
       <Toaster
           position="top-center"
           toastOptions={{
-              style: {
-                  background: '#fff',
-                  color: '#333',
+              success: {
+                style: {
+                  background: "green",
+                  color: "white",
                   padding: '16px',
                   borderRadius: '8px',
+                }
               },
+              error: {
+                style: {
+                  background: "red",
+                  color: "white",
+                  padding: '16px',
+                  borderRadius: '8px',
+                }
+              }
           }}
         />
     </>
