@@ -1,22 +1,17 @@
 import { useEffect, useState } from "react";
 import { invoke } from "@tauri-apps/api/core";
-import EmployeeModal from "../components/POS/EmployeeModal";
 import SearchBar from "../components/POS/SearchBar";
 import ProductList from "../components/POS/ProductList";
 import Cart from "../components/POS/Cart";
 import Header from "@/components/Header";
 import toast from "react-hot-toast";
+import { useAuth } from "@/context/AuthContext";
 
 interface Product {
     id: number;
     name: string;
     price: number;
     barcode: string;
-}
-
-interface Employee {
-    id: number;
-    name: string;
 }
 
 interface CartItem {
@@ -26,16 +21,14 @@ interface CartItem {
 }
 
 export default function PosPage() {
+    const { employeeId, employeeName } = useAuth();
     const [products, setProducts] = useState<Product[]>([]);
     const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
-    const [employees, setEmployees] = useState<Employee[]>([]);
     const [search, setSearch] = useState("");
     const [cart, setCart] = useState<CartItem[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [checkoutLoading, setCheckoutLoading] = useState(false);
-    const [showModal, setShowModal] = useState(false);
-    const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(null);
 
     useEffect(() => {
         async function fetchProducts() {
@@ -45,24 +38,12 @@ export default function PosPage() {
                 setFilteredProducts(res);
             } catch (err) {
                 console.error(err);
-                setError("Failed to fetch products.");
+                setError("فشل تحميل المنتجات");
             } finally {
                 setLoading(false);
             }
         }
         fetchProducts();
-    }, []);
-
-    useEffect(() => {
-        async function fetchEmployees() {
-            try {
-                const res = await invoke<Employee[]>("fetch_employees");
-                setEmployees(res);
-            } catch (err) {
-                console.error(err);
-            }
-        }
-        fetchEmployees();
     }, []);
 
     useEffect(() => {
@@ -117,24 +98,21 @@ export default function PosPage() {
         0
     );
 
-    const handleCheckoutClick = () => {
+    const handleCheckout = async () => {
         if (cart.length === 0) {
-            toast.error("السلة فارغة")
+            toast.error("السلة فارغة");
             return;
         }
-        setShowModal(true);
-    };
 
-    const confirmCheckout = async () => {
-        if (!selectedEmployee) {
-            toast.error("يرجى اختيار موظف")
+        if (!employeeId) {
+            toast.error("لا يوجد موظف مسجل الدخول");
             return;
         }
+
         setCheckoutLoading(true);
         try {
             const saleId = await invoke<number>("start_sale_cmd", {
-                employeeId: selectedEmployee.id,
-                employeeName: selectedEmployee.name,
+                employeeId,
             });
 
             for (const item of cart) {
@@ -148,13 +126,11 @@ export default function PosPage() {
                 });
             }
 
-            toast.success("تمت عملية البيع بنجاح!")
+            toast.success("تمت عملية البيع بنجاح!");
             setCart([]);
-            setShowModal(false);
-            setSelectedEmployee(null);
         } catch (err) {
-            console.error("Checkout failed. Please try again.")
-            toast.error("فشل إتمام العملية. يرجى المحاولة مرة أخرى.")
+            console.error("Checkout failed:", err);
+            toast.error("فشل إتمام العملية. يرجى المحاولة مرة أخرى.");
         } finally {
             setCheckoutLoading(false);
         }
@@ -169,6 +145,9 @@ export default function PosPage() {
                     <h1 className="text-3xl font-bold text-gray-900 mb-6 text-right">
                         عملية جديدة - <span className="text-red-600">نقطة البيع</span>
                     </h1>
+                    <p className="text-sm text-gray-500 mb-4 text-right">
+                        الموظف: <span className="font-semibold">{employeeName || "غير معروف"}</span>
+                    </p>
                     <SearchBar value={search} onChange={setSearch} />
                     <div className="mt-6">
                         <ProductList
@@ -188,21 +167,11 @@ export default function PosPage() {
                         onRemove={removeFromCart}
                         onUpdateExtra={updateExtra}
                         total={total}
-                        onCheckout={handleCheckoutClick}
+                        onCheckout={handleCheckout}
+                        loading={checkoutLoading}
                     />
                 </div>
             </div>
-
-            {showModal && (
-                <EmployeeModal
-                    employees={employees}
-                    selectedEmployee={selectedEmployee}
-                    setSelectedEmployee={setSelectedEmployee}
-                    onClose={() => setShowModal(false)}
-                    onConfirm={confirmCheckout}
-                    loading={checkoutLoading}
-                />
-            )}
         </div>
     );
 }

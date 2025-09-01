@@ -11,16 +11,21 @@ import {
     TableRow
 } from "@/components/ui/table";
 import { Card, CardContent, CardTitle } from "@/components/ui/card";
-import { Trash2, Check, X, Edit3, PlusCircle } from "lucide-react";
+import { Trash2, Check, X, Edit3, PlusCircle, Eye, EyeOff } from "lucide-react";
 import toast from "react-hot-toast";
 
-type Employee = { id: number; name: string };
+type Employee = { id: number; name: string; password: string };
 
 export default function EmployeesPage() {
     const [employees, setEmployees] = useState<Employee[]>([]);
     const [newEmployee, setNewEmployee] = useState("");
+    const [newPassword, setNewPassword] = useState("");
     const [editingId, setEditingId] = useState<number | null>(null);
     const [editingName, setEditingName] = useState("");
+    const [editingPassword, setEditingPassword] = useState("");
+
+    const [showNewPassword, setShowNewPassword] = useState(false);
+    const [showEditPassword, setShowEditPassword] = useState(false);
 
     useEffect(() => {
         (async () => {
@@ -37,43 +42,61 @@ export default function EmployeesPage() {
             setEmployees(result);
         } catch (e) {
             console.error("فشل في جلب الموظفين:", e);
-            toast.error("فشل في جلب الموظفين:")
+            toast.error("فشل في جلب الموظفين");
         }
     };
 
     const addEmployee = async () => {
-        if (!newEmployee.trim()) return;
+        if (!newEmployee.trim() || !newPassword.trim()) {
+            toast.error("يرجى إدخال الاسم وكلمة المرور");
+            return;
+        }
         try {
-            await invoke("add_new_employee", { name: newEmployee.trim() })
-            setNewEmployee("")
-            await fetchEmployees()
-            toast.success("تمت إضافة الموظف بنجاح")
+            await invoke("add_new_employee", {
+                name: newEmployee.trim(),
+                password: newPassword.trim()
+            });
+            setNewEmployee("");
+            setNewPassword("");
+            await fetchEmployees();
+            toast.success("تمت إضافة الموظف بنجاح");
         } catch (e) {
-            console.error("فشل في إضافة موظف جديد:", e)
-            toast.error("فشل في إضافة موظف جديد")
+            console.error("فشل في إضافة موظف جديد:", e);
+            toast.error("فشل في إضافة موظف جديد");
         }
     };
 
     const startEdit = (emp: Employee) => {
         setEditingId(emp.id);
         setEditingName(emp.name);
+        setEditingPassword(emp.password); // Make sure backend returns actual password
+        setShowEditPassword(false);
     };
 
     const cancelEdit = () => {
         setEditingId(null);
         setEditingName("");
+        setEditingPassword("");
     };
 
     const saveEdit = async () => {
         if (editingId === null) return;
+        if (!editingName.trim() || !editingPassword.trim()) {
+            toast.error("يرجى إدخال الاسم وكلمة المرور");
+            return;
+        }
         try {
-            await invoke("update_employee_cmd", { id: editingId, name: editingName.trim() });
+            await invoke("update_employee_cmd", {
+                id: editingId,
+                name: editingName.trim(),
+                password: editingPassword.trim()
+            });
             cancelEdit();
             await fetchEmployees();
             toast.success("تم تعديل بيانات الموظف بنجاح");
         } catch (e) {
-            console.error("فشل في تحديث الموظف:", e)
-            toast.error("فشل في تحديث الموظف")
+            console.error("فشل في تحديث الموظف:", e);
+            toast.error("فشل في تحديث الموظف");
         }
     };
 
@@ -84,7 +107,7 @@ export default function EmployeesPage() {
             toast.success("تم حذف الموظف");
         } catch (e) {
             console.error("فشل في حذف الموظف:", e);
-            toast.error("فشل في حذف الموظف")
+            toast.error("فشل في حذف الموظف");
         }
     };
 
@@ -105,6 +128,22 @@ export default function EmployeesPage() {
                             onChange={(e) => setNewEmployee(e.target.value)}
                             className="flex-1 border-red-300 focus:ring-2 focus:ring-red-500"
                         />
+                        <div className="relative flex-1">
+                            <Input
+                                type={showNewPassword ? "text" : "password"}
+                                placeholder="كلمة المرور"
+                                value={newPassword}
+                                onChange={(e) => setNewPassword(e.target.value)}
+                                className="w-full border-red-300 focus:ring-2 focus:ring-red-500 pr-10"
+                            />
+                            <button
+                                type="button"
+                                onClick={() => setShowNewPassword(!showNewPassword)}
+                                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                            >
+                                {showNewPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                            </button>
+                        </div>
                         <Button
                             onClick={addEmployee}
                             className="bg-red-600 hover:bg-red-700 text-white flex items-center gap-2 px-4 py-2 rounded-lg font-medium"
@@ -119,6 +158,7 @@ export default function EmployeesPage() {
                             <TableHeader>
                                 <TableRow className="bg-red-50 hover:bg-red-50">
                                     <TableHead className="text-gray-700 font-semibold">الاسم</TableHead>
+                                    <TableHead className="text-gray-700 font-semibold">كلمة المرور</TableHead>
                                     <TableHead className="text-right pr-10 text-gray-700 font-semibold">
                                         الإجراءات
                                     </TableHead>
@@ -136,6 +176,27 @@ export default function EmployeesPage() {
                                                 />
                                             ) : (
                                                 <span className="font-medium text-gray-800">{e.name}</span>
+                                            )}
+                                        </TableCell>
+                                        <TableCell>
+                                            {editingId === e.id ? (
+                                                <div className="relative flex items-center">
+                                                    <Input
+                                                        type={showEditPassword ? "text" : "password"}
+                                                        value={editingPassword}
+                                                        onChange={(ev) => setEditingPassword(ev.target.value)}
+                                                        className="w-full border-red-300 focus:ring-2 focus:ring-red-500 pr-10"
+                                                    />
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => setShowEditPassword(!showEditPassword)}
+                                                        className="absolute right-3 text-gray-500 hover:text-gray-700"
+                                                    >
+                                                        {showEditPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                                                    </button>
+                                                </div>
+                                            ) : (
+                                                <span className="font-medium text-gray-600">••••••</span>
                                             )}
                                         </TableCell>
                                         <TableCell className="text-right">
@@ -181,7 +242,7 @@ export default function EmployeesPage() {
 
                                 {employees.length === 0 && (
                                     <TableRow>
-                                        <TableCell colSpan={2} className="text-center text-gray-500 p-4">
+                                        <TableCell colSpan={3} className="text-center text-gray-500 p-4">
                                             لا يوجد موظفين.
                                         </TableCell>
                                     </TableRow>

@@ -11,6 +11,7 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import toast from "react-hot-toast";
 
 type SaleDetail = {
@@ -52,7 +53,7 @@ export default function ReportPage() {
             }
         } catch (err) {
             console.error("فشل في جلب التقرير:", err);
-            toast.error("فشل في جلب التقرير")
+            toast.error("فشل في جلب التقرير");
         }
     };
 
@@ -195,38 +196,40 @@ export default function ReportPage() {
                         </p>
                     </div>
 
-                    {/* Table */}
-                    <div className="overflow-x-auto">
-                        <Table>
-                            <TableHeader>
-                                <TableRow className="bg-red-100 hover:bg-red-100">
-                                    <TableHead>المنتج</TableHead>
-                                    <TableHead>الكمية</TableHead>
-                                    <TableHead>الموظف</TableHead>
-                                    <TableHead>الإجمالي</TableHead>
-                                    <TableHead>التاريخ والوقت</TableHead>
-                                </TableRow>
-                            </TableHeader>
-                            <TableBody>
-                                {sales.length > 0 ? (
-                                    sales.map((sale, index) => (
-                                        <TableRow key={index}>
-                                            <TableCell>{sale.product_name}</TableCell>
-                                            <TableCell>{sale.quantity}</TableCell>
-                                            <TableCell>{sale.employee_name}</TableCell>
-                                            <TableCell>{sale.total_price} ج.م</TableCell>
-                                            <TableCell>{formatCairoDateTime(sale.timestamp)}</TableCell>
-                                        </TableRow>
-                                    ))
-                                ) : (
-                                    <TableRow>
-                                        <TableCell colSpan={5} className="text-center text-gray-500 p-4">
-                                            لا توجد بيانات متاحة حاليًا
-                                        </TableCell>
+                    {/* Table with ScrollArea */}
+                    <div className="overflow-hidden">
+                        <ScrollArea className="h-64 w-full rounded-md border">
+                            <Table>
+                                <TableHeader>
+                                    <TableRow className="bg-red-100 hover:bg-red-100">
+                                        <TableHead>المنتج</TableHead>
+                                        <TableHead>الكمية</TableHead>
+                                        <TableHead>الموظف</TableHead>
+                                        <TableHead>الإجمالي</TableHead>
+                                        <TableHead>التاريخ والوقت</TableHead>
                                     </TableRow>
-                                )}
-                            </TableBody>
-                        </Table>
+                                </TableHeader>
+                                <TableBody>
+                                    {sales.length > 0 ? (
+                                        sales.map((sale, index) => (
+                                            <TableRow key={index}>
+                                                <TableCell>{sale.product_name}</TableCell>
+                                                <TableCell>{sale.quantity}</TableCell>
+                                                <TableCell>{sale.employee_name}</TableCell>
+                                                <TableCell>{sale.total_price} ج.م</TableCell>
+                                                <TableCell>{formatCairoDateTime(sale.timestamp)}</TableCell>
+                                            </TableRow>
+                                        ))
+                                    ) : (
+                                        <TableRow>
+                                            <TableCell colSpan={5} className="text-center text-gray-500 p-4">
+                                                لا توجد بيانات متاحة حاليًا
+                                            </TableCell>
+                                        </TableRow>
+                                    )}
+                                </TableBody>
+                            </Table>
+                        </ScrollArea>
                     </div>
                 </CardContent>
             </Card>

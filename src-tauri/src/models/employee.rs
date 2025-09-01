@@ -10,19 +10,26 @@ pub fn create_employee_table(conn: &Connection) -> Result<()> {
     conn.execute(
         "CREATE TABLE IF NOT EXISTS employees (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            name TEXT UNIQUE NOT NULL
+            name TEXT UNIQUE NOT NULL,
+            password TEXT NOT NULL
         )",
         [],
     )?;
     Ok(())
 }
 
-pub fn add_employee(conn: &Connection, name: &str) -> Result<usize> {
-    conn.execute("INSERT INTO employees (name) VALUES (?1)", params![name])
+pub fn add_employee(conn: &Connection, name: &str, password: &str) -> Result<usize> {
+    conn.execute(
+        "INSERT INTO employees (name, password) VALUES (?1, ?2)",
+        params![name, password],
+    )
 }
 
-pub fn update_employee(conn: &Connection, id: i32, name: &str) -> Result<usize> {
-    conn.execute("UPDATE employees SET name=?1 WHERE id=?2", params![name, id])
+pub fn update_employee(conn: &Connection, id: i32, name: &str, password: &str) -> Result<usize> {
+    conn.execute(
+        "UPDATE employees SET name=?1, password=?2 WHERE id=?3",
+        params![name, password, id],
+    )
 }
 
 pub fn delete_employee(conn: &Connection, id: i32) -> Result<usize> {
@@ -43,4 +50,19 @@ pub fn get_employees(conn: &Connection) -> Result<Vec<Employee>> {
         out.push(r?);
     }
     Ok(out)
+}
+
+/// Verify employee credentials for login
+pub fn verify_employee(conn: &Connection, name: &str, password: &str) -> Result<Option<Employee>> {
+    let mut stmt = conn.prepare("SELECT id, name FROM employees WHERE name = ?1 AND password = ?2")?;
+    let mut rows = stmt.query(params![name, password])?;
+
+    if let Some(row) = rows.next()? {
+        Ok(Some(Employee {
+            id: row.get(0)?,
+            name: row.get(1)?,
+        }))
+    } else {
+        Ok(None)
+    }
 }

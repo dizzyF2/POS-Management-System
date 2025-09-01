@@ -12,10 +12,10 @@ pub struct SaleReport {
 }
 
 // Start a sale: we insert both employee_id and employee_name (snapshot)
-pub fn start_sale(conn: &Connection, employee_id: i32, employee_name: &str) -> Result<i64> {
+pub fn start_sale(conn: &Connection, employee_id: i32) -> Result<i64> {
     conn.execute(
-        "INSERT INTO sales (employee_id, employee_name, total) VALUES (?1, ?2, 0)",
-        params![employee_id, employee_name],
+        "INSERT INTO sales (employee_id, total) VALUES (?1, 0)",
+        params![employee_id],
     )?;
     Ok(conn.last_insert_rowid())
 }

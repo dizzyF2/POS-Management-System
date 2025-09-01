@@ -6,7 +6,7 @@ use db::establish_connection;
 use db::init_db;
 use models::admin::{create_admin_table, add_admin, validate_admin, update_admin, verify_admin_password};
 use models::employee::{
-    create_employee_table, add_employee, get_employees, update_employee, delete_employee, Employee,
+    create_employee_table, add_employee, get_employees, update_employee, verify_employee, delete_employee, Employee,
 };
 use models::products::{
     create_product_table, add_product, get_products, update_product, delete_product, Product,
@@ -82,9 +82,9 @@ fn setup_employee_table(app: tauri::AppHandle) -> Result<(), String> {
 }
 
 #[tauri::command]
-fn add_new_employee(app: tauri::AppHandle, name: String) -> Result<(), String> {
+fn add_new_employee(app: tauri::AppHandle, name: String, password: String) -> Result<(), String> {
     let conn = init_db(&app).map_err(|e| e.to_string())?;
-    add_employee(&conn, &name).map(|_| ()).map_err(|e| e.to_string())
+    add_employee(&conn, &name, &password).map(|_| ()).map_err(|e| e.to_string())
 }
 
 #[tauri::command]
@@ -94,9 +94,15 @@ fn fetch_employees(app: tauri::AppHandle) -> Result<Vec<Employee>, String> {
 }
 
 #[tauri::command]
-fn update_employee_cmd(app: tauri::AppHandle, id: i32, name: String) -> Result<(), String> {
+fn update_employee_cmd(app: tauri::AppHandle, id: i32, name: String, password: String) -> Result<(), String> {
     let conn = init_db(&app).map_err(|e| e.to_string())?;
-    update_employee(&conn, id, &name).map(|_| ()).map_err(|e| e.to_string())
+    update_employee(&conn, id, &name, &password).map(|_| ()).map_err(|e| e.to_string())
+}
+
+#[tauri::command]
+fn login_employee_cmd(app: tauri::AppHandle, name: String, password: String) -> Result<Option<Employee>, String> {
+    let conn = init_db(&app).map_err(|e| e.to_string())?;
+    verify_employee(&conn, &name, &password).map_err(|e| e.to_string())
 }
 
 #[tauri::command]
@@ -141,9 +147,11 @@ fn delete_product_cmd(app: tauri::AppHandle, id: i32) -> Result<(), String> {
 
 // ---------------- SALE COMMANDS ----------------
 #[tauri::command]
-fn start_sale_cmd(app: tauri::AppHandle, employee_id: i32, employee_name: String) -> Result<i64, String> {
+fn start_sale_cmd(app: tauri::AppHandle, employee_id: i32) -> Result<i64, String> {
     let conn = init_db(&app).map_err(|e| e.to_string())?;
-    start_sale(&conn, employee_id, &employee_name).map_err(|e| e.to_string())
+
+    // Start sale with employee_id only
+    start_sale(&conn, employee_id).map_err(|e| e.to_string())
 }
 
 
@@ -207,6 +215,7 @@ pub fn run() {
             add_new_employee,
             fetch_employees,
             update_employee_cmd,
+            login_employee_cmd,
             delete_employee_cmd,
             // Product
             setup_product_table,

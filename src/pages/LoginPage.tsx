@@ -15,10 +15,15 @@ export default function LoginPage() {
     const [adminName, setAdminName] = useState("");
     const [adminPassword, setAdminPassword] = useState("");
 
+    const [employeeName, setEmployeeName] = useState("");
+    const [employeePassword, setEmployeePassword] = useState("");
+
     useEffect(() => {
         invoke("setup_admin");
+        invoke("setup_employee_table");
     }, []);
 
+    // ✅ Admin Login
     const handleAdminLogin = async () => {
         try {
             const isValid = await invoke<boolean>("login_admin", {
@@ -27,19 +32,37 @@ export default function LoginPage() {
             });
 
             if (isValid) {
-                login("admin");
+                login({ role: "admin" });
                 navigate("/admin");
             } else {
-                toast.error("بيانات الدخول غير صحيحة");
+                toast.error("بيانات المدير غير صحيحة");
             }
         } catch {
             toast.error("حدث خطأ أثناء تسجيل الدخول");
         }
     };
 
-    const handleEmployeeAccess = () => {
-        login("employee");
-        navigate("/pos");
+    // ✅ Employee Login (fetch ID and Name)
+    const handleEmployeeLogin = async () => {
+        try {
+            const employee = await invoke<{ id: number; name: string } | null>(
+                "login_employee_cmd",
+                {
+                    name: employeeName,
+                    password: employeePassword,
+                }
+            );
+
+            if (employee && employee.id) {
+                login({ role: "employee", employeeId: employee.id, employeeName: employee.name });
+                navigate("/pos");
+            } else {
+                toast.error("بيانات الموظف غير صحيحة");
+            }
+        } catch (e) {
+            console.error("error login: ", e);
+            toast.error("حدث خطأ أثناء تسجيل الدخول");
+        }
     };
 
     return (
@@ -54,7 +77,9 @@ export default function LoginPage() {
                     <h1 className="text-3xl font-extrabold text-red-600">النجم الدمشقي</h1>
                     <p className="text-sm text-gray-500">
                         {role === "admin"
-                            ? "تسجيل الدخول للوصول إلى لوحة التحكم"
+                            ? "تسجيل الدخول كمدير"
+                            : role === "employee"
+                            ? "تسجيل الدخول كموظف"
                             : "اختر الدور للاستمرار"}
                     </p>
                 </CardHeader>
@@ -63,7 +88,7 @@ export default function LoginPage() {
                     {!role && (
                         <div className="flex flex-col gap-4">
                             <Button
-                                onClick={handleEmployeeAccess}
+                                onClick={() => setRole("employee")}
                                 className="w-full bg-red-500 hover:bg-red-600 text-white font-semibold py-2 rounded-lg"
                             >
                                 موظف
@@ -85,7 +110,7 @@ export default function LoginPage() {
                                     type="text"
                                     placeholder="اسم المدير"
                                     value={adminName}
-                                    onChange={(e) => setAdminName(e.target.value.toLocaleLowerCase())}
+                                    onChange={(e) => setAdminName(e.target.value)}
                                     className="pl-10"
                                 />
                             </div>
@@ -95,7 +120,32 @@ export default function LoginPage() {
                                     type="password"
                                     placeholder="كلمة المرور"
                                     value={adminPassword}
-                                    onChange={(e) => setAdminPassword(e.target.value.toLocaleLowerCase())}
+                                    onChange={(e) => setAdminPassword(e.target.value)}
+                                    className="pl-10"
+                                />
+                            </div>
+                        </div>
+                    )}
+
+                    {role === "employee" && (
+                        <div className="flex flex-col gap-4 mt-4">
+                            <div className="relative">
+                                <User className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                                <Input
+                                    type="text"
+                                    placeholder="اسم الموظف"
+                                    value={employeeName}
+                                    onChange={(e) => setEmployeeName(e.target.value)}
+                                    className="pl-10"
+                                />
+                            </div>
+                            <div className="relative">
+                                <Lock className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                                <Input
+                                    type="password"
+                                    placeholder="كلمة المرور"
+                                    value={employeePassword}
+                                    onChange={(e) => setEmployeePassword(e.target.value)}
                                     className="pl-10"
                                 />
                             </div>
@@ -103,14 +153,24 @@ export default function LoginPage() {
                     )}
                 </CardContent>
 
-                {role === "admin" && (
+                {role && (
                     <CardFooter className="flex flex-col gap-3">
-                        <Button
-                            onClick={handleAdminLogin}
-                            className="w-full bg-red-500 hover:bg-red-600 text-white font-semibold py-2 rounded-lg"
-                        >
-                            تسجيل الدخول
-                        </Button>
+                        {role === "admin" && (
+                            <Button
+                                onClick={handleAdminLogin}
+                                className="w-full bg-red-500 hover:bg-red-600 text-white font-semibold py-2 rounded-lg"
+                            >
+                                تسجيل الدخول
+                            </Button>
+                        )}
+                        {role === "employee" && (
+                            <Button
+                                onClick={handleEmployeeLogin}
+                                className="w-full bg-red-500 hover:bg-red-600 text-white font-semibold py-2 rounded-lg"
+                            >
+                                تسجيل الدخول
+                            </Button>
+                        )}
                         <Button
                             variant="outline"
                             onClick={() => setRole(null)}

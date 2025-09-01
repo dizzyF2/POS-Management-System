@@ -28,16 +28,15 @@ pub fn init_db(app: &tauri::AppHandle) -> Result<Connection> {
         CREATE TABLE IF NOT EXISTS employees (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             name TEXT NOT NULL UNIQUE,
-            password TEXT
+            password TEXT NOT NULL
         );
 
         CREATE TABLE IF NOT EXISTS sales (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            employee_id INTEGER,
-            employee_name TEXT NOT NULL, 
+            employee_id INTEGER NOT NULL,
             total REAL NOT NULL DEFAULT 0,
             timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
-            FOREIGN KEY(employee_id) REFERENCES employees(id) ON DELETE SET NULL
+            FOREIGN KEY(employee_id) REFERENCES employees(id) ON DELETE CASCADE
         );
 
         CREATE TABLE IF NOT EXISTS sale_items (
