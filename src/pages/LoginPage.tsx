@@ -110,7 +110,7 @@ export default function LoginPage() {
                                     type="text"
                                     placeholder="اسم المدير"
                                     value={adminName}
-                                    onChange={(e) => setAdminName(e.target.value)}
+                                    onChange={(e) => setAdminName(e.target.value.toLocaleLowerCase())}
                                     className="pl-10"
                                 />
                             </div>
@@ -120,7 +120,7 @@ export default function LoginPage() {
                                     type="password"
                                     placeholder="كلمة المرور"
                                     value={adminPassword}
-                                    onChange={(e) => setAdminPassword(e.target.value)}
+                                    onChange={(e) => setAdminPassword(e.target.value.toLocaleLowerCase())}
                                     className="pl-10"
                                 />
                             </div>
@@ -135,7 +135,7 @@ export default function LoginPage() {
                                     type="text"
                                     placeholder="اسم الموظف"
                                     value={employeeName}
-                                    onChange={(e) => setEmployeeName(e.target.value)}
+                                    onChange={(e) => setEmployeeName(e.target.value.toLocaleLowerCase())}
                                     className="pl-10"
                                 />
                             </div>
@@ -145,7 +145,7 @@ export default function LoginPage() {
                                     type="password"
                                     placeholder="كلمة المرور"
                                     value={employeePassword}
-                                    onChange={(e) => setEmployeePassword(e.target.value)}
+                                    onChange={(e) => setEmployeePassword(e.target.value.toLocaleLowerCase())}
                                     className="pl-10"
                                 />
                             </div>

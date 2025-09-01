@@ -146,7 +146,7 @@ export default function PosPage() {
                         عملية جديدة - <span className="text-red-600">نقطة البيع</span>
                     </h1>
                     <p className="text-sm text-gray-500 mb-4 text-right">
-                        الموظف: <span className="font-semibold">{employeeName || "غير معروف"}</span>
+                        الموظف: <span className="font-semibold capitalize">{employeeName || "غير معروف"}</span>
                     </p>
                     <SearchBar value={search} onChange={setSearch} />
                     <div className="mt-6">

@@ -111,7 +111,7 @@ export default function AdminSettingsPage() {
                                 type="password"
                                 placeholder="أدخل كلمة المرور الحالية"
                                 value={oldPassword}
-                                onChange={(e) => setOldPassword(e.target.value)}
+                                onChange={(e) => setOldPassword(e.target.value.toLocaleLowerCase())}
                                 className="text-right"
                             />
                             <Button
@@ -128,21 +128,21 @@ export default function AdminSettingsPage() {
                                 type="text"
                                 placeholder="الاسم الجديد"
                                 value={newName}
-                                onChange={(e) => setNewName(e.target.value)}
+                                onChange={(e) => setNewName(e.target.value.toLocaleLowerCase())}
                                 className="text-right"
                             />
                             <Input
                                 type="password"
                                 placeholder="كلمة المرور الجديدة"
                                 value={newPassword}
-                                onChange={(e) => setNewPassword(e.target.value)}
+                                onChange={(e) => setNewPassword(e.target.value.toLocaleLowerCase())}
                                 className="text-right"
                             />
                             <Input
                                 type="password"
                                 placeholder="تأكيد كلمة المرور"
                                 value={confirmPassword}
-                                onChange={(e) => setConfirmPassword(e.target.value)}
+                                onChange={(e) => setConfirmPassword(e.target.value.toLocaleLowerCase())}
                                 className="text-right"
                             />
                             <div className="flex gap-3 justify-end">

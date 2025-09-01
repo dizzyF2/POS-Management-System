@@ -11,7 +11,7 @@ import {
     TableRow
 } from "@/components/ui/table";
 import { Card, CardContent, CardTitle } from "@/components/ui/card";
-import { Trash2, Check, X, Edit3, PlusCircle, Eye, EyeOff } from "lucide-react";
+import { Trash2, Check, X, Edit3, PlusCircle } from "lucide-react";
 import toast from "react-hot-toast";
 
 type Employee = { id: number; name: string; password: string };
@@ -23,9 +23,6 @@ export default function EmployeesPage() {
     const [editingId, setEditingId] = useState<number | null>(null);
     const [editingName, setEditingName] = useState("");
     const [editingPassword, setEditingPassword] = useState("");
-
-    const [showNewPassword, setShowNewPassword] = useState(false);
-    const [showEditPassword, setShowEditPassword] = useState(false);
 
     useEffect(() => {
         (async () => {
@@ -69,8 +66,7 @@ export default function EmployeesPage() {
     const startEdit = (emp: Employee) => {
         setEditingId(emp.id);
         setEditingName(emp.name);
-        setEditingPassword(emp.password); // Make sure backend returns actual password
-        setShowEditPassword(false);
+        setEditingPassword(emp.password);
     };
 
     const cancelEdit = () => {
@@ -125,25 +121,16 @@ export default function EmployeesPage() {
                             type="text"
                             placeholder="أدخل اسم الموظف"
                             value={newEmployee}
-                            onChange={(e) => setNewEmployee(e.target.value)}
+                            onChange={(e) => setNewEmployee(e.target.value.toLocaleLowerCase())}
                             className="flex-1 border-red-300 focus:ring-2 focus:ring-red-500"
                         />
-                        <div className="relative flex-1">
-                            <Input
-                                type={showNewPassword ? "text" : "password"}
-                                placeholder="كلمة المرور"
-                                value={newPassword}
-                                onChange={(e) => setNewPassword(e.target.value)}
-                                className="w-full border-red-300 focus:ring-2 focus:ring-red-500 pr-10"
-                            />
-                            <button
-                                type="button"
-                                onClick={() => setShowNewPassword(!showNewPassword)}
-                                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
-                            >
-                                {showNewPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-                            </button>
-                        </div>
+                        <Input
+                            type={"password"}
+                            placeholder="كلمة المرور"
+                            value={newPassword}
+                            onChange={(e) => setNewPassword(e.target.value.toLocaleLowerCase())}
+                            className="flex-1 w-full border-red-300 focus:ring-2 focus:ring-red-500 pr-10"
+                        />
                         <Button
                             onClick={addEmployee}
                             className="bg-red-600 hover:bg-red-700 text-white flex items-center gap-2 px-4 py-2 rounded-lg font-medium"
@@ -171,7 +158,7 @@ export default function EmployeesPage() {
                                             {editingId === e.id ? (
                                                 <Input
                                                     value={editingName}
-                                                    onChange={(ev) => setEditingName(ev.target.value)}
+                                                    onChange={(ev) => setEditingName(ev.target.value.toLocaleLowerCase())}
                                                     className="w-full border-red-300 focus:ring-2 focus:ring-red-500"
                                                 />
                                             ) : (
@@ -180,21 +167,12 @@ export default function EmployeesPage() {
                                         </TableCell>
                                         <TableCell>
                                             {editingId === e.id ? (
-                                                <div className="relative flex items-center">
-                                                    <Input
-                                                        type={showEditPassword ? "text" : "password"}
-                                                        value={editingPassword}
-                                                        onChange={(ev) => setEditingPassword(ev.target.value)}
-                                                        className="w-full border-red-300 focus:ring-2 focus:ring-red-500 pr-10"
-                                                    />
-                                                    <button
-                                                        type="button"
-                                                        onClick={() => setShowEditPassword(!showEditPassword)}
-                                                        className="absolute right-3 text-gray-500 hover:text-gray-700"
-                                                    >
-                                                        {showEditPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-                                                    </button>
-                                                </div>
+                                                <Input
+                                                    type={"password"}
+                                                    value={editingPassword}
+                                                    onChange={(ev) => setEditingPassword(ev.target.value.toLocaleLowerCase())}
+                                                    className="flex items-center w-full border-red-300 focus:ring-2 focus:ring-red-500 pr-10"
+                                                />
                                             ) : (
                                                 <span className="font-medium text-gray-600">••••••</span>
                                             )}
