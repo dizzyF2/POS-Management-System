@@ -150,7 +150,6 @@ fn delete_product_cmd(app: tauri::AppHandle, id: i32) -> Result<(), String> {
 fn start_sale_cmd(app: tauri::AppHandle, employee_id: i32) -> Result<i64, String> {
     let conn = init_db(&app).map_err(|e| e.to_string())?;
 
-    // Start sale with employee_id only
     start_sale(&conn, employee_id).map_err(|e| e.to_string())
 }
 

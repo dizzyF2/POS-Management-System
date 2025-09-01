@@ -11,7 +11,7 @@ pub struct SaleReport {
     pub timestamp: String,
 }
 
-// Start a sale: we insert both employee_id and employee_name (snapshot)
+// Start a sale: (snapshot)
 pub fn start_sale(conn: &Connection, employee_id: i32) -> Result<i64> {
     conn.execute(
         "INSERT INTO sales (employee_id, total) VALUES (?1, 0)",
@@ -20,7 +20,7 @@ pub fn start_sale(conn: &Connection, employee_id: i32) -> Result<i64> {
     Ok(conn.last_insert_rowid())
 }
 
-// Add an item: store both product_id and product_name (snapshot)
+// Add an item: (snapshot)
 pub fn add_sale_item(
     conn: &Connection,
     sale_id: i64,
