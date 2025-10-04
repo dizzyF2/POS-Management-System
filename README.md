@@ -20,19 +20,16 @@ If you are interested in accessing the **full project** with complete features, 
 
 ## 📸 Screenshots
 
-<details>
-  <summary>Click to expand screenshots</summary>
-
-  ![Dashboard](./assets/images/login-page.png)  
-  ![POS](./assets/images/pos-page.png)  
-  ![Reports](./assets/images/admin-panel.png)  
-  ![Settings](./assets/images/products.png)  
-  ![Employees](./assets/images/categories.png)  
-  ![Categories](./assets/images/sizes.png)  
-  ![Products](./assets/images/employees.png)  
-  ![Login](./assets/images/reports.png)  
-
-</details>
+<div style="display: flex; overflow-x: auto; gap: 10px;">
+  <img src="/public/assets/images/login-page.png" alt="Login" width="400" />
+  <img src="/public/assets/images/pos-page.png" alt="POS Screen" width="400" />
+  <img src="/public/assets/images/admin-panel.png" alt="Dashboard" width="400" />
+  <img src="/public/assets/images/products.png" alt="products" width="400" />
+  <img src="/public/assets/images/categories.png" alt="Categories" width="400" />
+  <img src="/public/assets/images/sizes.png" alt="Sizes" width="400" />
+  <img src="/public/assets/images/employees.png" alt="Employees" width="400" />
+  <img src="/public/assets/images/reports.png" alt="Reports" width="400" />
+</div>
 
 ---
 
@@ -41,16 +38,4 @@ If you are interested in accessing the **full project** with complete features, 
 - **Tauri** – For building secure and lightweight cross-platform apps.  
 - **Rust** – Backend logic and database queries.  
 - **React.js + TypeScript** – Frontend for a smooth UI/UX.  
-- **SQLite3** – Local database for fast and reliable storage.  
-
----
-
-## 🚀 Getting Started
-
-### Prerequisites
-- [Node.js](https://nodejs.org/) (v18+ recommended)  
-- [Rust](https://www.rust-lang.org/tools/install) (latest stable)  
-- [SQLite3](https://www.sqlite.org/download.html)  
-
-### Installation
-bash # Clone the repository git clone https://github.com/dizzyF2/Mokhtar-Restaurant-System.git cd Mokhtar-Restaurant-System # Install dependencies npm install # Run in development npm run tauri dev # Build for production npm run tauri build
+- **SQLite3** – Local database for fast and reliable storage.
