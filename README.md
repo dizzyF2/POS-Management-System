@@ -21,14 +21,30 @@ If you are interested in accessing the **full project** with complete features, 
 ## 📸 Screenshots
 
 <div style="display: flex; overflow-x: auto; gap: 10px;">
-  <img src="/public/assets/images/login-page.png" alt="Login" width="400" />
-  <img src="/public/assets/images/pos-page.png" alt="POS Screen" width="400" />
-  <img src="/public/assets/images/admin-panel.png" alt="Dashboard" width="400" />
-  <img src="/public/assets/images/products.png" alt="products" width="400" />
-  <img src="/public/assets/images/categories.png" alt="Categories" width="400" />
-  <img src="/public/assets/images/sizes.png" alt="Sizes" width="400" />
-  <img src="/public/assets/images/employees.png" alt="Employees" width="400" />
-  <img src="/public/assets/images/reports.png" alt="Reports" width="400" />
+  <a href="/public/assets/images/login-page.png" target="_blank">
+    <img src="/public/assets/images/login-page.png" alt="Login" width="400" />
+  </a>
+  <a href="/public/assets/images/pos-page.png" target="_blank">
+    <img src="/public/assets/images/pos-page.png" alt="POS Screen" width="400" />
+  </a>
+  <a href="/public/assets/images/admin-panel.png" target="_blank">
+    <img src="/public/assets/images/admin-panel.png" alt="Dashboard" width="400" />
+  </a>
+  <a href="/public/assets/images/products.png" target="_blank">
+    <img src="/public/assets/images/products.png" alt="Products" width="400" />
+  </a>
+  <a href="/public/assets/images/categories.png" target="_blank">
+    <img src="/public/assets/images/categories.png" alt="Categories" width="400" />
+  </a>
+  <a href="/public/assets/images/sizes.png" target="_blank">
+    <img src="/public/assets/images/sizes.png" alt="Sizes" width="400" />
+  </a>
+  <a href="/public/assets/images/employees.png" target="_blank">
+    <img src="/public/assets/images/employees.png" alt="Employees" width="400" />
+  </a>
+  <a href="/public/assets/images/reports.png" target="_blank">
+    <img src="/public/assets/images/reports.png" alt="Reports" width="400" />
+  </a>
 </div>
 
 ---
